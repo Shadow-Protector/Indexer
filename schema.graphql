@@ -1,0 +1,67 @@
+type VaultFactory_AssetDeposited {
+    id: ID!
+    vaultAddress: String!
+    orderId: String!
+}
+
+type VaultFactory_CancelDeposit {
+    id: ID!
+    vaultAddress: String!
+    orderId: String!
+}
+
+type VaultFactory_OrderCancelled {
+    id: ID!
+    vaultAddress: String!
+    orderId: String!
+}
+
+type VaultFactory_OrderInventory {
+    id: ID!
+    _platform: BigInt!
+    _platformAddress: String!
+    _parameter: BigInt!
+    destinationChainId: BigInt!
+    _salt: BigInt!
+    conditionValue: BigInt!
+    vault: String!
+    orderId: String!
+    status: Int!
+    solverTransaction: String
+}
+
+type VaultFactory_OrderCreated {
+    id: ID!
+    _platform: BigInt!
+    _platformAddress: String!
+    _parameter: BigInt!
+    destinationChainId: BigInt!
+    _salt: BigInt!
+    conditionValue: BigInt!
+    vault: String!
+    orderId: String!
+}
+
+type VaultFactory_OrderExecuted {
+    id: ID!
+    vaultAddress: String!
+    orderId: String!
+}
+
+type VaultFactory_UpdatedHandler {
+    id: ID!
+    newConditionEvaluator: String!
+    oldConditionEvaluator: String!
+}
+
+type VaultFactory_UpdatedOwner {
+    id: ID!
+    oldOwner: String!
+    newOwner: String!
+}
+
+type VaultFactory_VaultCreated {
+    id: ID!
+    vaultAddress: String!
+    owner: String!
+}
