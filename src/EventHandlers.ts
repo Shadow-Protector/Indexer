@@ -77,6 +77,22 @@ VaultFactory.OrderCreated.handler(async ({ event, context }) => {
   };
 
   context.VaultFactory_OrderCreated.set(entity);
+
+  const order: VaultFactory_OrderInventory = {
+    id: event.params.vault + event.params.orderId,
+    _platform: event.params._platform,
+    _platformAddress: event.params._platformAddress,
+    _parameter: event.params._parameter,
+    destinationChainId: event.params.destinationChainId,
+    _salt: event.params._salt,
+    conditionValue: event.params.conditionValue,
+    vault: event.params.vault,
+    orderId: event.params.orderId,
+    status: 1,
+    solverTransaction: "",
+  };
+
+  context.VaultFactory_OrderInventory.set(order);
 });
 
 VaultFactory.OrderExecuted.handlerWithLoader({
