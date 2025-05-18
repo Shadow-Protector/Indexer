@@ -87,6 +87,7 @@ VaultFactory.OrderCreated.handler(async ({ event, context }) => {
     _platform: event.params._platform,
     _platformAddress: event.params._platformAddress,
     _parameter: event.params._parameter,
+    originChainId: BigInt(event.chainId),
     destinationChainId: event.params.destinationChainId,
     _salt: event.params._salt,
     conditionValue: event.params.conditionValue,
@@ -122,8 +123,6 @@ VaultFactory.OrderExecuted.handlerWithLoader({
     );
 
     if (order) {
-      context.log.info(`OrderExecution_Handler: Inside Condition (info)`);
-
       const existingOrder: VaultFactory_OrderInventory = {
         ...order,
         status: 2,

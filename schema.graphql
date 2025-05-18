@@ -21,6 +21,7 @@ type VaultFactory_OrderInventory {
     _platform: BigInt!
     _platformAddress: String!
     _parameter: BigInt!
+    originChainId: BigInt!
     destinationChainId: BigInt!
     _salt: BigInt!
     conditionValue: BigInt!
