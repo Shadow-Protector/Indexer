@@ -18,12 +18,12 @@ type VaultFactory_OrderCancelled {
 
 type VaultFactory_OrderInventory {
     id: ID!
-    _platform: BigInt!
-    _platformAddress: String!
-    _parameter: BigInt!
+    platform: BigInt!
+    platformAddress: String!
+    parameter: BigInt!
     originChainId: BigInt!
     destinationChainId: BigInt!
-    _salt: BigInt!
+    salt: BigInt!
     conditionValue: BigInt!
     vault: String!
     orderId: String!

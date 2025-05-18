@@ -84,12 +84,12 @@ VaultFactory.OrderCreated.handler(async ({ event, context }) => {
 
   const order: VaultFactory_OrderInventory = {
     id: event.params.vault + event.params.orderId,
-    _platform: event.params._platform,
-    _platformAddress: event.params._platformAddress,
-    _parameter: event.params._parameter,
+    platform: event.params._platform,
+    platformAddress: event.params._platformAddress,
+    parameter: event.params._parameter,
     originChainId: BigInt(event.chainId),
     destinationChainId: event.params.destinationChainId,
-    _salt: event.params._salt,
+    salt: event.params._salt,
     conditionValue: event.params.conditionValue,
     vault: event.params.vault,
     orderId: event.params.orderId,
