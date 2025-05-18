@@ -50,7 +50,7 @@ VaultFactory.OrderCancelled.handlerWithLoader({
         ...order,
         status: 3,
       };
-      context.VaultFactory_OrderCreated.set(existingOrder);
+      context.VaultFactory_OrderInventory.set(existingOrder);
     }
 
     const entity: VaultFactory_OrderCancelled = {
@@ -78,6 +78,10 @@ VaultFactory.OrderCreated.handler(async ({ event, context }) => {
 
   context.VaultFactory_OrderCreated.set(entity);
 
+  context.log.debug(
+    `OrderCreation: Processing  with id: ${event.params.vault + event.params.orderId} (debug)`,
+  );
+
   const order: VaultFactory_OrderInventory = {
     id: event.params.vault + event.params.orderId,
     _platform: event.params._platform,
@@ -101,6 +105,10 @@ VaultFactory.OrderExecuted.handlerWithLoader({
       event.params.vaultAddress + event.params.orderId,
     );
 
+    context.log.debug(
+      `OrderExecution_Loader: Processing  with id: ${event.params.vaultAddress + event.params.orderId} (debug)`,
+    );
+
     // Return the loaded data to the handler
     return {
       order,
@@ -109,13 +117,19 @@ VaultFactory.OrderExecuted.handlerWithLoader({
 
   handler: async ({ event, context, loaderReturn }) => {
     const { order } = loaderReturn;
+    context.log.debug(
+      `OrderExecution_Handler: Processing  order: ${order ? order.id : "Empty"} (debug)`,
+    );
+
     if (order) {
+      context.log.info(`OrderExecution_Handler: Inside Condition (info)`);
+
       const existingOrder: VaultFactory_OrderInventory = {
         ...order,
         status: 2,
         solverTransaction: event.transaction.hash,
       };
-      context.VaultFactory_OrderCreated.set(existingOrder);
+      context.VaultFactory_OrderInventory.set(existingOrder);
     }
 
     const entity: VaultFactory_OrderExecuted = {
