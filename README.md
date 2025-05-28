@@ -1,4 +1,8 @@
-## Envio Indexer
+# Shadow Protector Indexer
+
+## Description
+The Indexer indexes orders and helps solvers in finding active orders.
+
 
 *Please refer to the [documentation website](https://docs.envio.dev) for a thorough guide on all [Envio](https://envio.dev) indexer features*
 
