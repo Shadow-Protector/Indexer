@@ -2,18 +2,21 @@ type VaultFactory_AssetDeposited {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_CancelDeposit {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_OrderCancelled {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_OrderInventory {
@@ -41,12 +44,14 @@ type VaultFactory_OrderCreated {
     conditionValue: BigInt!
     vault: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_OrderExecuted {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_UpdatedHandler {
