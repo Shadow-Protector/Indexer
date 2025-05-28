@@ -17,7 +17,7 @@ import {
 // Active = 1 (After Deposit )
 // Executed = 2 (After Execute )
 // Cancelled = 3 ( After Cancel Order or Cancel Deposit)
-// TODO: Asset Deposition Cancelled = 4 (Order Not Cancelled but depositing asset withdraw)
+// Asset Deposition Cancelled = 4 (Order Not Cancelled but depositing asset withdraw)
 // END
 
 VaultFactory.AssetDeposited.handlerWithLoader({
@@ -52,15 +52,39 @@ VaultFactory.AssetDeposited.handlerWithLoader({
   },
 });
 
-VaultFactory.CancelDeposit.handler(async ({ event, context }) => {
-  const entity: VaultFactory_CancelDeposit = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    vaultAddress: event.params.vaultAddress,
-    orderId: event.params.orderId,
-    chainId: event.chainId,
-  };
+VaultFactory.CancelDeposit.handlerWithLoader({
+  loader: async ({ event, context }) => {
+    const order = await context.VaultFactory_OrderInventory.get(
+      event.params.vaultAddress + event.params.orderId,
+    );
 
-  context.VaultFactory_CancelDeposit.set(entity);
+    // Return the loaded data to the handler
+    return {
+      order,
+    };
+  },
+
+  handler: async ({ event, context, loaderReturn }) => {
+    const { order } = loaderReturn;
+    if (order) {
+      if (order.status != 3) {
+        const existingOrder: VaultFactory_OrderInventory = {
+          ...order,
+          status: 4,
+        };
+        context.VaultFactory_OrderInventory.set(existingOrder);
+      }
+    }
+
+    const entity: VaultFactory_CancelDeposit = {
+      id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+      vaultAddress: event.params.vaultAddress,
+      orderId: event.params.orderId,
+      chainId: event.chainId,
+    };
+
+    context.VaultFactory_CancelDeposit.set(entity);
+  },
 });
 
 VaultFactory.OrderCancelled.handlerWithLoader({
