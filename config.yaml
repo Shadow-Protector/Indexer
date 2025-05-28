@@ -1,5 +1,16 @@
 # yaml-language-server: $schema=./node_modules/envio/evm.schema.json
-name: envio-indexer
+name: Shadow-Protector
+contracts:
+  - name: VaultFactory
+    handler: src/EventHandlers.ts
+    events:
+      - event: AssetDeposited(address vaultAddress, bytes32 orderId)
+      - event: CancelDeposit(address vaultAddress, bytes32 orderId)
+      - event: OrderCancelled(address indexed vaultAddress, bytes32 indexed orderId)
+      - event: OrderCreated(uint16 _platform, address _platformAddress, uint16 _parameter, uint32 destinationChainId, uint32 _salt, uint256 conditionValue, address vault, bytes32 orderId)
+      - event: OrderExecuted(address indexed vaultAddress, bytes32 indexed orderId)
+      - event: VaultCreated(address indexed vaultAddress, address indexed owner)
+
 networks:
   - id: 8453
     start_block: 0
@@ -7,14 +18,14 @@ networks:
       - name: VaultFactory
         address:
           - 0xEc9A1021cC0d4619ac6405a648239bEB0bFCf76C
-        handler: src/EventHandlers.ts
-        events:
-          - event: AssetDeposited(address vaultAddress, bytes32 orderId)
-          - event: CancelDeposit(address vaultAddress, bytes32 orderId)
-          - event: OrderCancelled(address indexed vaultAddress, bytes32 indexed orderId)
-          - event: OrderCreated(uint16 _platform, address _platformAddress, uint16 _parameter, uint32 destinationChainId, uint32 _salt, uint256 conditionValue, address vault, bytes32 orderId)
-          - event: OrderExecuted(address indexed vaultAddress, bytes32 indexed orderId)
-          - event: VaultCreated(address indexed vaultAddress, address indexed owner)
+
+  - id: 42161
+    start_block: 0
+    contracts:
+      - name: VaultFactory
+        address:
+          - 0xdE8bb0fbcA6deE981c607C54f94bdd34A9D15362
+
 unordered_multichain_mode: true
 field_selection:
   transaction_fields:
