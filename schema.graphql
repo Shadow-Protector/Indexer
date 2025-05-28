@@ -33,11 +33,11 @@ type VaultFactory_OrderInventory {
 
 type VaultFactory_OrderCreated {
     id: ID!
-    _platform: BigInt!
-    _platformAddress: String!
-    _parameter: BigInt!
+    platform: BigInt!
+    platformAddress: String!
+    parameter: BigInt!
     destinationChainId: BigInt!
-    _salt: BigInt!
+    salt: BigInt!
     conditionValue: BigInt!
     vault: String!
     orderId: String!
@@ -65,4 +65,5 @@ type VaultFactory_VaultCreated {
     id: ID!
     vaultAddress: String!
     owner: String!
+    chainId: Int!
 }

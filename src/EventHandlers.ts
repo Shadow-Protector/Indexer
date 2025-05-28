@@ -31,6 +31,7 @@ VaultFactory.CancelDeposit.handler(async ({ event, context }) => {
 
   context.VaultFactory_CancelDeposit.set(entity);
 });
+
 VaultFactory.OrderCancelled.handlerWithLoader({
   loader: async ({ event, context }) => {
     const order = await context.VaultFactory_OrderInventory.get(
@@ -66,11 +67,11 @@ VaultFactory.OrderCancelled.handlerWithLoader({
 VaultFactory.OrderCreated.handler(async ({ event, context }) => {
   const entity: VaultFactory_OrderCreated = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    _platform: event.params._platform,
-    _platformAddress: event.params._platformAddress,
-    _parameter: event.params._parameter,
+    platform: event.params._platform,
+    platformAddress: event.params._platformAddress,
+    parameter: event.params._parameter,
     destinationChainId: event.params.destinationChainId,
-    _salt: event.params._salt,
+    salt: event.params._salt,
     conditionValue: event.params.conditionValue,
     vault: event.params.vault,
     orderId: event.params.orderId,
@@ -146,6 +147,7 @@ VaultFactory.VaultCreated.handler(async ({ event, context }) => {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     vaultAddress: event.params.vaultAddress,
     owner: event.params.owner,
+    chainId: event.chainId,
   };
 
   context.VaultFactory_VaultCreated.set(entity);
