@@ -125,11 +125,11 @@ VaultFactory.OrderCancelled.handlerWithLoader({
 VaultFactory.OrderCreated.handler(async ({ event, context }) => {
   const entity: VaultFactory_OrderCreated = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    platform: event.params._platform,
-    platformAddress: event.params._platformAddress,
-    parameter: event.params._parameter,
+    platform: event.params.platform,
+    platformAddress: event.params.platformAddress,
+    parameter: event.params.parameter,
     destinationChainId: event.params.destinationChainId,
-    salt: event.params._salt,
+    salt: event.params.salt,
     conditionValue: event.params.conditionValue,
     vault: event.params.vault,
     orderId: event.params.orderId,
@@ -144,12 +144,12 @@ VaultFactory.OrderCreated.handler(async ({ event, context }) => {
 
   const order: VaultFactory_OrderInventory = {
     id: event.params.vault + event.params.orderId,
-    platform: event.params._platform,
-    platformAddress: event.params._platformAddress,
-    parameter: event.params._parameter,
+    platform: event.params.platform,
+    platformAddress: event.params.platformAddress,
+    parameter: event.params.parameter,
     originChainId: BigInt(event.chainId),
     destinationChainId: event.params.destinationChainId,
-    salt: event.params._salt,
+    salt: event.params.salt,
     conditionValue: event.params.conditionValue,
     vault: event.params.vault,
     orderId: event.params.orderId,
