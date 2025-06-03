@@ -10,7 +10,7 @@ contracts:
       - event: OrderCreated(uint16 platform, address platformAddress, uint16 parameter, uint32 destinationChainId, uint32 salt, uint256 conditionValue, address vault, bytes32 orderId)
       - event: OrderExecuted(address indexed vaultAddress, bytes32 indexed orderId)
       - event: VaultCreated(address indexed vaultAddress, address indexed owner)
-
+      - event: CrossChainHook(address vault, bytes32 orderId, uint32 destinationChainId)
 networks:
   - id: 8453
     start_block: 0

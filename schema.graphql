@@ -74,3 +74,11 @@ type VaultFactory_VaultCreated {
     owner: String!
     chainId: Int!
 }
+
+type VaultFactory_CrossChainHook {
+    id: ID!
+    vaultAddress: String!
+    orderId: String!
+    chainId: Int!
+    destinationChainId: BigInt!
+}

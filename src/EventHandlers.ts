@@ -10,6 +10,7 @@ import {
   VaultFactory_OrderExecuted,
   VaultFactory_OrderInventory,
   VaultFactory_VaultCreated,
+  VaultFactory_CrossChainHook,
 } from "generated";
 
 // Status
@@ -213,4 +214,16 @@ VaultFactory.VaultCreated.handler(async ({ event, context }) => {
   };
 
   context.VaultFactory_VaultCreated.set(entity);
+});
+
+VaultFactory.CrossChainHook.handler(async ({ event, context }) => {
+  const entity: VaultFactory_CrossChainHook = {
+    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    vaultAddress: event.params.vault,
+    orderId: event.params.orderId,
+    chainId: event.chainId,
+    destinationChainId: event.params.destinationChainId,
+  };
+
+  context.VaultFactory_CrossChainHook.set(entity);
 });
