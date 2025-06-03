@@ -10,27 +10,86 @@ import {
   VaultFactory_OrderExecuted,
   VaultFactory_OrderInventory,
   VaultFactory_VaultCreated,
+  VaultFactory_CrossChainHook,
 } from "generated";
 
-VaultFactory.AssetDeposited.handler(async ({ event, context }) => {
-  const entity: VaultFactory_AssetDeposited = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    vaultAddress: event.params.vaultAddress,
-    orderId: event.params.orderId,
-  };
+// Status
+// Creation = 0 (After Creating Order)
+// Active = 1 (After Deposit )
+// Executed = 2 (After Execute )
+// Cancelled = 3 ( After Cancel Order or Cancel Deposit)
+// Asset Deposition Cancelled = 4 (Order Not Cancelled but depositing asset withdraw)
+// END
 
-  context.VaultFactory_AssetDeposited.set(entity);
+VaultFactory.AssetDeposited.handlerWithLoader({
+  loader: async ({ event, context }) => {
+    const order = await context.VaultFactory_OrderInventory.get(
+      event.params.vaultAddress + event.params.orderId,
+    );
+
+    // Return the loaded data to the handler
+    return {
+      order,
+    };
+  },
+
+  handler: async ({ event, context, loaderReturn }) => {
+    const { order } = loaderReturn;
+    if (order) {
+      const existingOrder: VaultFactory_OrderInventory = {
+        ...order,
+        depositToken: event.params.depositToken,
+        convertToken: event.params.convertToken,
+        status: 1,
+      };
+      context.VaultFactory_OrderInventory.set(existingOrder);
+    }
+
+    const entity: VaultFactory_AssetDeposited = {
+      id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+      vaultAddress: event.params.vaultAddress,
+      orderId: event.params.orderId,
+      chainId: event.chainId,
+    };
+    context.VaultFactory_AssetDeposited.set(entity);
+  },
 });
 
-VaultFactory.CancelDeposit.handler(async ({ event, context }) => {
-  const entity: VaultFactory_CancelDeposit = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    vaultAddress: event.params.vaultAddress,
-    orderId: event.params.orderId,
-  };
+VaultFactory.CancelDeposit.handlerWithLoader({
+  loader: async ({ event, context }) => {
+    const order = await context.VaultFactory_OrderInventory.get(
+      event.params.vaultAddress + event.params.orderId,
+    );
 
-  context.VaultFactory_CancelDeposit.set(entity);
+    // Return the loaded data to the handler
+    return {
+      order,
+    };
+  },
+
+  handler: async ({ event, context, loaderReturn }) => {
+    const { order } = loaderReturn;
+    if (order) {
+      if (order.status != 3) {
+        const existingOrder: VaultFactory_OrderInventory = {
+          ...order,
+          status: 4,
+        };
+        context.VaultFactory_OrderInventory.set(existingOrder);
+      }
+    }
+
+    const entity: VaultFactory_CancelDeposit = {
+      id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+      vaultAddress: event.params.vaultAddress,
+      orderId: event.params.orderId,
+      chainId: event.chainId,
+    };
+
+    context.VaultFactory_CancelDeposit.set(entity);
+  },
 });
+
 VaultFactory.OrderCancelled.handlerWithLoader({
   loader: async ({ event, context }) => {
     const order = await context.VaultFactory_OrderInventory.get(
@@ -57,6 +116,7 @@ VaultFactory.OrderCancelled.handlerWithLoader({
       id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
       vaultAddress: event.params.vaultAddress,
       orderId: event.params.orderId,
+      chainId: event.chainId,
     };
 
     context.VaultFactory_OrderCancelled.set(entity);
@@ -66,14 +126,15 @@ VaultFactory.OrderCancelled.handlerWithLoader({
 VaultFactory.OrderCreated.handler(async ({ event, context }) => {
   const entity: VaultFactory_OrderCreated = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    _platform: event.params._platform,
-    _platformAddress: event.params._platformAddress,
-    _parameter: event.params._parameter,
+    platform: event.params.platform,
+    platformAddress: event.params.platformAddress,
+    parameter: event.params.parameter,
     destinationChainId: event.params.destinationChainId,
-    _salt: event.params._salt,
+    salt: event.params.salt,
     conditionValue: event.params.conditionValue,
     vault: event.params.vault,
     orderId: event.params.orderId,
+    chainId: event.chainId,
   };
 
   context.VaultFactory_OrderCreated.set(entity);
@@ -84,16 +145,18 @@ VaultFactory.OrderCreated.handler(async ({ event, context }) => {
 
   const order: VaultFactory_OrderInventory = {
     id: event.params.vault + event.params.orderId,
-    platform: event.params._platform,
-    platformAddress: event.params._platformAddress,
-    parameter: event.params._parameter,
+    platform: event.params.platform,
+    platformAddress: event.params.platformAddress,
+    parameter: event.params.parameter,
     originChainId: BigInt(event.chainId),
     destinationChainId: event.params.destinationChainId,
-    salt: event.params._salt,
+    salt: event.params.salt,
     conditionValue: event.params.conditionValue,
     vault: event.params.vault,
     orderId: event.params.orderId,
-    status: 1,
+    depositToken: "",
+    convertToken: "",
+    status: 0,
     solverTransaction: "",
   };
 
@@ -135,6 +198,7 @@ VaultFactory.OrderExecuted.handlerWithLoader({
       id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
       vaultAddress: event.params.vaultAddress,
       orderId: event.params.orderId,
+      chainId: event.chainId,
     };
 
     context.VaultFactory_OrderExecuted.set(entity);
@@ -146,7 +210,20 @@ VaultFactory.VaultCreated.handler(async ({ event, context }) => {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     vaultAddress: event.params.vaultAddress,
     owner: event.params.owner,
+    chainId: event.chainId,
   };
 
   context.VaultFactory_VaultCreated.set(entity);
+});
+
+VaultFactory.CrossChainHook.handler(async ({ event, context }) => {
+  const entity: VaultFactory_CrossChainHook = {
+    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    vaultAddress: event.params.vault,
+    orderId: event.params.orderId,
+    chainId: event.chainId,
+    destinationChainId: event.params.destinationChainId,
+  };
+
+  context.VaultFactory_CrossChainHook.set(entity);
 });

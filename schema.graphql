@@ -2,18 +2,21 @@ type VaultFactory_AssetDeposited {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_CancelDeposit {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_OrderCancelled {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_OrderInventory {
@@ -28,25 +31,29 @@ type VaultFactory_OrderInventory {
     vault: String!
     orderId: String!
     status: Int!
+    depositToken: String
+    convertToken: String
     solverTransaction: String
 }
 
 type VaultFactory_OrderCreated {
     id: ID!
-    _platform: BigInt!
-    _platformAddress: String!
-    _parameter: BigInt!
+    platform: BigInt!
+    platformAddress: String!
+    parameter: BigInt!
     destinationChainId: BigInt!
-    _salt: BigInt!
+    salt: BigInt!
     conditionValue: BigInt!
     vault: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_OrderExecuted {
     id: ID!
     vaultAddress: String!
     orderId: String!
+    chainId: Int!
 }
 
 type VaultFactory_UpdatedHandler {
@@ -65,4 +72,13 @@ type VaultFactory_VaultCreated {
     id: ID!
     vaultAddress: String!
     owner: String!
+    chainId: Int!
+}
+
+type VaultFactory_CrossChainHook {
+    id: ID!
+    vaultAddress: String!
+    orderId: String!
+    chainId: Int!
+    destinationChainId: BigInt!
 }
