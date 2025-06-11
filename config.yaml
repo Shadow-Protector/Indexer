@@ -4,7 +4,7 @@ contracts:
   - name: VaultFactory
     handler: src/EventHandlers.ts
     events:
-      - event: AssetDeposited(address vaultAddress, bytes32 orderId, address depositToken, address convertToken)
+      - event: AssetDeposited(address vaultAddress, bytes32 orderId, address baseToken, address outputToken)
       - event: CancelDeposit(address vaultAddress, bytes32 orderId)
       - event: OrderCancelled(address indexed vaultAddress, bytes32 indexed orderId)
       - event: OrderCreated(uint16 platform, address platformAddress, uint16 parameter, uint32 destinationChainId, uint32 salt, uint256 conditionValue, address vault, bytes32 orderId)

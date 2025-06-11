@@ -38,8 +38,8 @@ VaultFactory.AssetDeposited.handlerWithLoader({
     if (order) {
       const existingOrder: VaultFactory_OrderInventory = {
         ...order,
-        depositToken: event.params.depositToken,
-        convertToken: event.params.convertToken,
+        baseToken: event.params.baseToken,
+        outputToken: event.params.outputToken,
         status: 1,
       };
       context.VaultFactory_OrderInventory.set(existingOrder);
@@ -154,8 +154,8 @@ VaultFactory.OrderCreated.handler(async ({ event, context }) => {
     conditionValue: event.params.conditionValue,
     vault: event.params.vault,
     orderId: event.params.orderId,
-    depositToken: "",
-    convertToken: "",
+    baseToken: "",
+    outputToken: "",
     status: 0,
     solverTransaction: "",
   };

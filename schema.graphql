@@ -31,8 +31,8 @@ type VaultFactory_OrderInventory {
     vault: String!
     orderId: String!
     status: Int!
-    depositToken: String
-    convertToken: String
+    baseToken: String
+    outputToken: String
     solverTransaction: String
 }
 
